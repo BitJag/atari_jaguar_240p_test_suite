@@ -18,13 +18,16 @@ Learn more about the 240p Test Suite by Artemino at http://junkerhq.net/240p/
 
 ## Compiling & Running
 Compiling requires the following tools/libraries:
+- m68k-atari-mint cross-tools (cross compiler - Needed for building and using the Removers Library) - https://tho-otto.de/crossmint.php
 - RMAC (compiler) - http://rmac.is-slick.com/
 - RLN (linker) - http://rmac.is-slick.com/
 - Removers Library (C Library) - https://github.com/theRemovers/rmvlib/
 - Ray's lz77 Packer (Optional: Only if you plan on modifying graphics) - http://s390174849.online.de/ray.tscc.de/files/lz77_v13.zip
 - JCP (Optional: If you are flashing the program to a Skunkboard) - http://harmlesslion.com/software/skunkboard
 
-Running the program requires a working ROM file.  Currently, if running the program from RAM space by using the .COF file, this works for most tests, but will crash for some tests that need to unpack assets that will exceed the available space in RAM, crashing the program.
+If you are running a linux environment that has access to the latest Ubuntu repositories, I have a set of bash scripts that automates the setup of a Jaguar devolopment environment on your linux system.  See the following for more details: https://github.com/BitJag/ubuntu-rmvlib-install-scripts
+
+Running the 240p Test Suite without crashing on real hardware requires a working ROM file.  Currently, if running the program from RAM space by using the .COF file, this works for most tests, but will crash for some tests that need to unpack assets that will exceed the available space in RAM, crashing the program.
 
 A ROM file can be produced by passing the file through Jiffi, or adding a universal cart header to the .BIN file manually or using makefastboot.
 
