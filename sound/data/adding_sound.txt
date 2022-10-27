@@ -1,0 +1,15 @@
+ In order to add sound to a project, an entry for that file should be placed in the 
+ 
+ /sound/data/gfx_data.s
+ 
+ And should follow this convention
+ 
+ sound_data  _C_CODE_NAME,"/path/to/file.mod"
+ 
+ ----------------------
+ NOTE:
+ 
+ Additional '.s" files can be added for better organization, as long as they are placed in the same folder as the 'gfx_data.s' file
+ 
+ 
+ Notes on creating comapatible .mod and .wav files for the removers library.

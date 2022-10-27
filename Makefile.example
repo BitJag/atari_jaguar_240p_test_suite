@@ -1,0 +1,60 @@
+DISTFILES=Makefile Makefile.config Makefile.example README $(SRCC) $(SRCH) $(SRCS) $(OTHEROBJS)
+
+TARFILE=$(PROJECT).tar.gz
+
+all: .depend $(PROJECT).cof $(PROJECT).bin
+
+.PHONY: all dist alpine bjl debug skunk reset
+
+$(PROJECT).cof: $(SRCH) $(OBJS) Makefile $(OTHEROBJS)
+	$(ALN) $(ALNFLAGSRAM) -e -o $(PROJECT).cof crt0.o $(OBJS) $(OTHEROBJS) $(RMVLIBS) jlibc.a libgcc.a 
+
+$(PROJECT).bin: $(SRCH) $(OBJS) Makefile $(OTHEROBJS)
+	$(ALN) $(ALNFLAGSROM) -n -o $(PROJECT).bin crt0.o $(OBJS) $(OTHEROBJS) $(RMVLIBS) jlibc.a libgcc.a 
+
+%.o: %.s
+	$(MADMAC) $(MACFLAGS) $<
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
+
+dist: $(PROJECT).cof $(PROJECT).bin
+	mkdir -p $(PROJECT)
+	cp -a $(DISTFILES) $(PROJECT).cof $(PROJECT).bin $(PROJECT)
+	tar cfvzh $(TARFILE) $(PROJECT)
+	rm -rf $(PROJECT)
+
+rom: $(PROJECT).cof
+	jag-rom-maker $(PROJECT).bin
+
+alpine: $(PROJECT).cof
+	$(RDB) $(PROJECT).cof
+
+bjl: $(PROJECT).bin
+	$(LO) -8 $(PROJECT).bin
+
+debug: $(PROJECT).cof
+	$(WDB) $(PROJECT).cof
+
+skunkram: $(PROJECT).cof
+	$(JCP) $(PROJECT).cof
+
+skunkrom: $(PROJECT).cof
+	$(JCP) -f $(PROJECT).rom
+
+vjram: $(PROJECT).cof
+	$(VJ) -a $(PROJECT).cof
+
+vjrom: $(PROJECT).cof
+	$(VJ) -a $(PROJECT).rom
+
+reset:
+	$(JCP) -r
+
+clean:
+	rm -f *~ $(OBJS) $(PROJECT).cof $(PROJECT).bin $(PROJECT).rom
+
+.depend: $(SRCC)
+	$(CC) -MM $(SRCC) > .depend
+
+-include .depend
