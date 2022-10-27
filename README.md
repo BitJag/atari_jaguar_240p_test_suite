@@ -32,12 +32,12 @@ A ROM file can be produced by passing the file through Jiffi, or adding a univer
 Finally, you can run your ROM by using an emulator, a flash card reader, Skunkboard, or by creating your own cartridge. Currently there isn't anyone I'm aware of that is producing carts of the Jaguar 240p Test Suite.
 
 ## Contributors
-`
+```
 * Code: Artemio Urbina
 * Code: William Thorup
 * Main menu graphics: Asher
 * Extra patterns and collaboration: Konsolkongen & shmups regulars
-`
+```
 =============================================================================== Copyright 2011-2022 Artemio Urbina
 
 Atari Jaguar Version Copyright 2022 William Thorup (BitJag)
