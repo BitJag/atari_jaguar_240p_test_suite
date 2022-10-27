@@ -18,9 +18,9 @@ Learn more about the 240p Test Suite by Artemino at http://junkerhq.net/240p/
 
 ## Compiling & Running
 Compiling requires the following tools/libraries:
-- RMAC http://rmac.is-slick.com/
-- RLN http://rmac.is-slick.com/
-- Removers Library https://github.com/theRemovers/rmvlib/
+- RMAC (compiler) - http://rmac.is-slick.com/
+- RLN (linker) - http://rmac.is-slick.com/
+- Removers Library (C Library) - https://github.com/theRemovers/rmvlib/
 - Ray's lz77 Packer (Optional: Only if you plan on modifying graphics) - http://s390174849.online.de/ray.tscc.de/files/lz77_v13.zip
 - JCP (Optional: If you are flashing the program to a Skunkboard) - http://harmlesslion.com/software/skunkboard
 
