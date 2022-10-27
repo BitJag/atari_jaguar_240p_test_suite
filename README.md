@@ -21,6 +21,7 @@ Compiling requires the folling tools/libraries:
 - RMAC http://rmac.is-slick.com/
 - RLN http://rmac.is-slick.com/
 - Removers Library https://github.com/theRemovers/rmvlib/
+- Ray's lz77 Packer (Only if you plan on modifying graphics) - http://s390174849.online.de/ray.tscc.de/files/lz77_v13.zip
 
 Running requires a working ROM file.  Currently, if running the program from RAM space by using the .COF file, this works for most tests, but will crash for some tests that need to unpack assets that will exceed the available space in RAM, crashing the program.
 
