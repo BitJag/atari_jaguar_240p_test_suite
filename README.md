@@ -17,20 +17,21 @@ This is free software, with full source code available under the GPL.
 Learn more about the 240p Test Suite by Artemino at http://junkerhq.net/240p/
 
 ## Compiling & Running
-Compiling requires the folling tools/libraries:
+Compiling requires the following tools/libraries:
 - RMAC http://rmac.is-slick.com/
 - RLN http://rmac.is-slick.com/
 - Removers Library https://github.com/theRemovers/rmvlib/
-- Ray's lz77 Packer (Only if you plan on modifying graphics) - http://s390174849.online.de/ray.tscc.de/files/lz77_v13.zip
+- Ray's lz77 Packer (Optional: Only if you plan on modifying graphics) - http://s390174849.online.de/ray.tscc.de/files/lz77_v13.zip
+- JCP (Optional: If you are flashing the program to a Skunkboard) - http://harmlesslion.com/software/skunkboard
 
-Running requires a working ROM file.  Currently, if running the program from RAM space by using the .COF file, this works for most tests, but will crash for some tests that need to unpack assets that will exceed the available space in RAM, crashing the program.
+Running the program requires a working ROM file.  Currently, if running the program from RAM space by using the .COF file, this works for most tests, but will crash for some tests that need to unpack assets that will exceed the available space in RAM, crashing the program.
 
 A ROM file can be produced by passing the file through Jiffi, or adding a universal cart header to the .BIN file manually or using makefastboot.
 
 - Jiffi - https://reboot.untergrund.net/new-reboot/jiffi.html
 - makefastboot - https://github.com/tursilion/makefastboot/
 
-Finally, you can run your ROM by using an emulator, a flash card reader, Skunkboard, or by creating your own cartridge. Currently there isn't anyone I'm aware of that is producing carts of the Jaguar 240p Test Suite.
+Finally, you can run your ROM file by using an emulator, a flash card reader, Skunkboard, or by creating your own physical cartridge. Currently there isn't anyone I'm aware of that is producing carts of the Jaguar 240p Test Suite.
 
 ## Contributors
 ```
