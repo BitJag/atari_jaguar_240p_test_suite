@@ -3,6 +3,9 @@
 ## NOTE
 This software is a work in progress. When compared with other ports of the 240p Test Suite, some functionality is missing. There are also Jaguar specific functions that still need to be implemented. Please see the issues section for more details.
 
+## Download
+A current build for those who just want to try it out is available at https://jagcorner.com/240p-test-suite/ Once we reach a version 1.0, we will do an official release here.
+
 ## Introduction
 _As described on https://github.com/ArtemioUrbina/240pTestSuite_
 
