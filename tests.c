@@ -559,7 +559,7 @@ void HScrollTest(){
             }
 
             //unload vertical assets
-            if(kikiSprite != NULL && vertical != 1){
+            if(kikiSprite[0] != NULL && vertical != 1){
                 kikiSprite[0]->invisible = 1;
                 kikiSprite[1]->invisible = 1;
                 detach_sprite_from_display(kikiSprite[0]);
