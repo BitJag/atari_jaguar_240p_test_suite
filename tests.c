@@ -2894,7 +2894,7 @@ void ReflexNTiming(){
 
         if((settings->joy1 & JOYPAD_OPTION) && settings->controllerLock == 0){
             settings->controllerLock = 1;
-            exit = 1;
+            exit = 2;
         }
 
         if(drawoffset){
@@ -3093,214 +3093,218 @@ void ReflexNTiming(){
     
     //Results Screen
     
-    //setup textboxes for results screen
-    textBox *resultsTextBox[10];
-    for(i = 0; i != 10; i++){
-        resultsTextBox[i] = newTextBox("   ", 64, 9, mainFont, 0, settings->d, 96, 48 + (9*i), 13, 1);
-    }
+    if(exit != 2){
         
-    int total = 0;
-    int count = 0;
-    int c = 0;
-    
-    exit = 0;
-
-    for(c = 0; c < 10; c++){
-        if(clicks[c] != 0xFF){
-            
-            
-            char tmpText[6] = "00000\0";
-            
-            itostring(tmpText, clicks[c], 10);
-
-            pal = WHITE;
-            if(clicks[c] == 0)
-                pal = GREEN;
-            if(clicks[c] < 0)
-                pal = RED;
-            if(clicks[c] >= 0)
-            {
-                total += clicks[c];
-                count++;
-            }
-            
-            int shift = 0;
-            
-            if(clicks[c] > 9){
-                shift = 6;
-            }
-            
-            updateLine(settings, mainFont, resultsTextBox[c], tmpText, resultsTextBox[c]->tbSprite->x - shift, 999999, pal);
-
+        //setup textboxes for results screen
+        textBox *resultsTextBox[10];
+        for(i = 0; i != 10; i++){
+            resultsTextBox[i] = newTextBox("   ", 64, 9, mainFont, 0, settings->d, 96, 48 + (9*i), 13, 1);
         }
-    }
-    
-    textBox *plusSignTextBox = newTextBox("+  ", 32, 9, mainFont, 0, settings->d, resultsTextBox[4]->tbSprite->x - 12, resultsTextBox[4]->tbSprite->y , 13, 1);
-    updateLine(settings, mainFont, plusSignTextBox, NULL, 999999, 999999, GREEN);
-    
-    textBox *lineTextBox = newTextBox("-----", 64, 9, mainFont, 0, settings->d, resultsTextBox[9]->tbSprite->x - 10, resultsTextBox[9]->tbSprite->y + 9, 13, 1);
-    updateLine(settings, mainFont, lineTextBox, NULL, 999999, 999999, WHITE);
-    
-    textBox *frameTitleTextBox = newTextBox("frames", 128, 9, mainFont, 0, settings->d, lineTextBox->tbSprite->x + 101, lineTextBox->tbSprite->y + 9, 13, 1);
-    updateLine(settings, mainFont, frameTitleTextBox, NULL, 999999, 999999, WHITE);
-    textBox *frameResultsTextBox = newTextBox("10/10=1           ", 128, 9, mainFont, 0, settings->d, frameTitleTextBox->tbSprite->x - 90, frameTitleTextBox->tbSprite->y, 13, 1);
-    updateLine(settings, mainFont, frameResultsTextBox, NULL, 999999, 999999, WHITE);
+            
+        int total = 0;
+        int count = 0;
+        int c = 0;
+        
+        exit = 0;
 
-    textBox *resultsDescriptionTextBox = newTextBox("These are your reflexes, not a lag test.^^A frame is 00.0000ms", 320, 128, mainFont, 32, settings->d, 0, 180, 13, 1);
-    updateLine(settings, mainFont, resultsDescriptionTextBox, NULL, 999999, 999999, WHITE);
-    
-    textBox *millisecondsValueTextBox = newTextBox("00.0000       ", 320, 9, mainFont, 12, settings->d, resultsTextBox[4]->tbSprite->x + 32, resultsTextBox[4]->tbSprite->y, 13, 1);
-    updateLine(settings, mainFont, millisecondsValueTextBox, NULL, 999999, 999999, RED);
-    textBox *millisecondsTitleTextBox = newTextBox("milliseconds", 320, 9, mainFont, 12, settings->d, millisecondsValueTextBox->tbSprite->x + 48, millisecondsValueTextBox->tbSprite->y, 13, 1);
-    updateLine(settings, mainFont, millisecondsTitleTextBox, NULL, 999999, 999999, WHITE);
-    
-    textBox *reflexAreGoodTextBox = newTextBox("YOUR REFLEXES ARE ABSOLUTELY GOD-LIKE!", 256, 9, mainFont, 0, settings->d, 160, 32, 13, 1);
-    
-    if(count > 0)
-    {
-        
-        char tmpText[6];
-        char str[20];
-        uint32_t totalFixed = total << 16;
-        uint32_t countFixed = count << 16;
-        uint32_t framerate = settings->PALNTSC == 0 ? ( (20<<16) | (( (1196<<16) / 10000) & 0x0000FFFF) ) : ( (16<<16) | (( (6884<<16) / 10000) & 0x0000FFFF) );
-        
-        int h = 0;
+        for(c = 0; c < 10; c++){
+            if(clicks[c] != 0xFF){
+                
+                
+                char tmpText[6] = "00000\0";
+                
+                itostring(tmpText, clicks[c], 10);
 
-        itostring(tmpText, total, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = 47; // /
-        h++;
-        
-        itostring(tmpText, count, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = 61; // =
-        h++;
-        
-        str[h] = 32; // space
-        h++;
-        
-        uint32_t totald = ((phrase)totalFixed << 16) / countFixed;
-        
-        uint32_t interger = totald >> 16;
-        uint32_t fraction = ((totald & 0x0000FFFF) * 10000) >> 16;
-        
-        itostring(tmpText, interger, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = 46; // .
-        h++;
-        
-        itostring(tmpText, fraction, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = '\0';
-        
-        updateLine(settings, mainFont, frameResultsTextBox, str, 999999, 999999, WHITE);
-        
-        //highlight text
-        for(i = 0; i != frameResultsTextBox->char_count; i++){
-            if( (frameResultsTextBox->text[i] == '/') || (frameResultsTextBox->text[i] == '=') ){
-                textRangeColorChange(frameResultsTextBox, i, 1, 0x01, 0x02);
+                pal = WHITE;
+                if(clicks[c] == 0)
+                    pal = GREEN;
+                if(clicks[c] < 0)
+                    pal = RED;
+                if(clicks[c] >= 0)
+                {
+                    total += clicks[c];
+                    count++;
+                }
+                
+                int shift = 0;
+                
+                if(clicks[c] > 9){
+                    shift = 6;
+                }
+                
+                updateLine(settings, mainFont, resultsTextBox[c], tmpText, resultsTextBox[c]->tbSprite->x - shift, 999999, pal);
+
             }
         }
         
+        textBox *plusSignTextBox = newTextBox("+  ", 32, 9, mainFont, 0, settings->d, resultsTextBox[4]->tbSprite->x - 12, resultsTextBox[4]->tbSprite->y , 13, 1);
+        updateLine(settings, mainFont, plusSignTextBox, NULL, 999999, 999999, GREEN);
         
-        interger = framerate >> 16;
-        fraction = ((framerate & 0x0000FFFF) * 10000) >> 16;
+        textBox *lineTextBox = newTextBox("-----", 64, 9, mainFont, 0, settings->d, resultsTextBox[9]->tbSprite->x - 10, resultsTextBox[9]->tbSprite->y + 9, 13, 1);
+        updateLine(settings, mainFont, lineTextBox, NULL, 999999, 999999, WHITE);
         
-        h = 0;
-        
-        itostring(tmpText, interger, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = 46; // .
-        h++;
-        
-        itostring(tmpText, fraction, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = '\0';
-        
-        strncpy(resultsDescriptionTextBox->text+53, str, strlen(str));
-        
+        textBox *frameTitleTextBox = newTextBox("frames", 128, 9, mainFont, 0, settings->d, lineTextBox->tbSprite->x + 101, lineTextBox->tbSprite->y + 9, 13, 1);
+        updateLine(settings, mainFont, frameTitleTextBox, NULL, 999999, 999999, WHITE);
+        textBox *frameResultsTextBox = newTextBox("10/10=1           ", 128, 9, mainFont, 0, settings->d, frameTitleTextBox->tbSprite->x - 90, frameTitleTextBox->tbSprite->y, 13, 1);
+        updateLine(settings, mainFont, frameResultsTextBox, NULL, 999999, 999999, WHITE);
+
+        textBox *resultsDescriptionTextBox = newTextBox("These are your reflexes, not a lag test.^^A frame is 00.0000ms", 320, 128, mainFont, 32, settings->d, 0, 180, 13, 1);
         updateLine(settings, mainFont, resultsDescriptionTextBox, NULL, 999999, 999999, WHITE);
-                    
-        countFixed = ((phrase)totald * (phrase)framerate) / (1 << 16);
         
-        interger = countFixed >> 16;
-        fraction = ((countFixed & 0x0000FFFF) * 10000) >> 16;
+        textBox *millisecondsValueTextBox = newTextBox("00.0000       ", 320, 9, mainFont, 12, settings->d, resultsTextBox[4]->tbSprite->x + 32, resultsTextBox[4]->tbSprite->y, 13, 1);
+        updateLine(settings, mainFont, millisecondsValueTextBox, NULL, 999999, 999999, RED);
+        textBox *millisecondsTitleTextBox = newTextBox("milliseconds", 320, 9, mainFont, 12, settings->d, millisecondsValueTextBox->tbSprite->x + 48, millisecondsValueTextBox->tbSprite->y, 13, 1);
+        updateLine(settings, mainFont, millisecondsTitleTextBox, NULL, 999999, 999999, WHITE);
         
-        h = 0;
+        textBox *reflexAreGoodTextBox = newTextBox("YOUR REFLEXES ARE ABSOLUTELY GOD-LIKE!", 256, 9, mainFont, 0, settings->d, 160, 32, 13, 1);
         
-        itostring(tmpText, interger, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = 46; // .
-        h++;
-        
-        itostring(tmpText, fraction, 10);
-        strncpy(str+h, tmpText, strlen(tmpText));
-        h += strlen(tmpText);
-        
-        str[h] = '\0';
-        
-        updateLine(settings, mainFont, millisecondsValueTextBox, str, 999999, 999999, RED);
-        
-        if(total < 5){
-            updateLine(settings, mainFont, reflexAreGoodTextBox, "EXCELLENT REFLEXES!", 999999, 999999, RED);
+        if(count > 0)
+        {
+            
+            char tmpText[6];
+            char str[20];
+            uint32_t totalFixed = total << 16;
+            uint32_t countFixed = count << 16;
+            uint32_t framerate = settings->PALNTSC == 0 ? ( (20<<16) | (( (1196<<16) / 10000) & 0x0000FFFF) ) : ( (16<<16) | (( (6884<<16) / 10000) & 0x0000FFFF) );
+            
+            int h = 0;
+
+            itostring(tmpText, total, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = 47; // /
+            h++;
+            
+            itostring(tmpText, count, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = 61; // =
+            h++;
+            
+            str[h] = 32; // space
+            h++;
+            
+            uint32_t totald = ((phrase)totalFixed << 16) / countFixed;
+            
+            uint32_t interger = totald >> 16;
+            uint32_t fraction = ((totald & 0x0000FFFF) * 10000) >> 16;
+            
+            itostring(tmpText, interger, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = 46; // .
+            h++;
+            
+            itostring(tmpText, fraction, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = '\0';
+            
+            updateLine(settings, mainFont, frameResultsTextBox, str, 999999, 999999, WHITE);
+            
+            //highlight text
+            for(i = 0; i != frameResultsTextBox->char_count; i++){
+                if( (frameResultsTextBox->text[i] == '/') || (frameResultsTextBox->text[i] == '=') ){
+                    textRangeColorChange(frameResultsTextBox, i, 1, 0x01, 0x02);
+                }
+            }
+            
+            
+            interger = framerate >> 16;
+            fraction = ((framerate & 0x0000FFFF) * 10000) >> 16;
+            
+            h = 0;
+            
+            itostring(tmpText, interger, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = 46; // .
+            h++;
+            
+            itostring(tmpText, fraction, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = '\0';
+            
+            strncpy(resultsDescriptionTextBox->text+53, str, strlen(str));
+            
+            updateLine(settings, mainFont, resultsDescriptionTextBox, NULL, 999999, 999999, WHITE);
+                        
+            countFixed = ((phrase)totald * (phrase)framerate) / (1 << 16);
+            
+            interger = countFixed >> 16;
+            fraction = ((countFixed & 0x0000FFFF) * 10000) >> 16;
+            
+            h = 0;
+            
+            itostring(tmpText, interger, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = 46; // .
+            h++;
+            
+            itostring(tmpText, fraction, 10);
+            strncpy(str+h, tmpText, strlen(tmpText));
+            h += strlen(tmpText);
+            
+            str[h] = '\0';
+            
+            updateLine(settings, mainFont, millisecondsValueTextBox, str, 999999, 999999, RED);
+            
+            if(total < 5){
+                updateLine(settings, mainFont, reflexAreGoodTextBox, "EXCELLENT REFLEXES!", 999999, 999999, RED);
+            }
+            if(total == 0){
+                updateLine(settings, mainFont, reflexAreGoodTextBox, "INCREDIBLE REFLEXES!!", 999999, 999999, RED);
+            }
+                        
         }
-        if(total == 0){
-            updateLine(settings, mainFont, reflexAreGoodTextBox, "INCREDIBLE REFLEXES!!", 999999, 999999, RED);
+
+        TOMREGS->bg = 0x4FE5;
+        hide_or_show_display_layer_range(settings->d, 1, 3, 15);
+
+        while(!exit){
+            
+            vsync();
+            
+            read_joypad_state(settings->j_state);
+            settings->joy1 = settings->j_state->j1;
+        
+            //controller
+            if((settings->joy1 & 0xFFFFFF) == 0){
+                settings->controllerLock = 0;
+            }
+
+            if(((settings->joy1 & JOYPAD_OPTION) || (settings->joy1 & JOYPAD_B)) && settings->controllerLock == 0){
+                settings->controllerLock = 1;
+                exit = 1;
+            }
+            
         }
-                    
+
+        hide_or_show_display_layer_range(settings->d, 0, 3, 15);
+        
+        for(i = 0; i != 10; i++){
+            resultsTextBox[i] = freeTextBox(resultsTextBox[i]);
+        }
+            
+        plusSignTextBox = freeTextBox(plusSignTextBox);
+        plusSignTextBox = freeTextBox(lineTextBox);
+        frameTitleTextBox = freeTextBox(frameTitleTextBox);
+        frameResultsTextBox = freeTextBox(frameResultsTextBox);
+        resultsDescriptionTextBox = freeTextBox(resultsDescriptionTextBox);
+        millisecondsValueTextBox = freeTextBox(millisecondsValueTextBox);
+        millisecondsTitleTextBox = freeTextBox(millisecondsTitleTextBox);
+        reflexAreGoodTextBox = freeTextBox(reflexAreGoodTextBox);
+        
     }
-
-    TOMREGS->bg = 0x4FE5;
-    hide_or_show_display_layer_range(settings->d, 1, 3, 15);
-
-    while(!exit){
-        
-        vsync();
-        
-        read_joypad_state(settings->j_state);
-        settings->joy1 = settings->j_state->j1;
-    
-        //controller
-        if((settings->joy1 & 0xFFFFFF) == 0){
-            settings->controllerLock = 0;
-        }
-
-        if(((settings->joy1 & JOYPAD_OPTION) || (settings->joy1 & JOYPAD_B)) && settings->controllerLock == 0){
-            settings->controllerLock = 1;
-            exit = 1;
-        }
-        
-    }
-
-    hide_or_show_display_layer_range(settings->d, 0, 3, 15);
-    
-    for(i = 0; i != 10; i++){
-        resultsTextBox[i] = freeTextBox(resultsTextBox[i]);
-    }
-        
-    plusSignTextBox = freeTextBox(plusSignTextBox);
-    plusSignTextBox = freeTextBox(lineTextBox);
-    frameTitleTextBox = freeTextBox(frameTitleTextBox);
-    frameResultsTextBox = freeTextBox(frameResultsTextBox);
-    resultsDescriptionTextBox = freeTextBox(resultsDescriptionTextBox);
-    millisecondsValueTextBox = freeTextBox(millisecondsValueTextBox);
-    millisecondsTitleTextBox = freeTextBox(millisecondsTitleTextBox);
-    reflexAreGoodTextBox = freeTextBox(reflexAreGoodTextBox);
     
     TOMREGS->bg = 0x0000;
     
