@@ -1686,11 +1686,12 @@ void PassiveLagTest(){
 
 void SoundTest(){
     
-    int i = 1;
+    int i = 0;
+    int ii = 0;
     int exit = 0;
     int panning = 8;
     int playback = 0;
-    int playbackFreq = C7;
+    int playbackFreq = C4;
     int redraw = 1;
     int menuSelection = 0;
     int menuSelectionOld = 1;
@@ -1701,7 +1702,9 @@ void SoundTest(){
     int panningSelection = 1;
     int panningSelectionOld = panningSelection;
     
-    int16_t DSPSample[128];
+    int sampleRepeat = 100;
+    int sampleSize = 128 * sampleRepeat;
+    int16_t DSPSample[sampleSize];
                 
     for(i = 0; i != 20; i++){
         uint16_t red = (rand()%10) << 11;
@@ -1758,15 +1761,15 @@ void SoundTest(){
     
     textBox *octaveNameTextBox[5];
     
-    octaveNameTextBox[0] = newTextBox("C5", 128, 9, mainFont, 0, settings->d, 104, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
+    octaveNameTextBox[0] = newTextBox("C2", 128, 9, mainFont, 0, settings->d, 104, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
     updateLine(settings, mainFont, octaveNameTextBox[0], NULL, 9999999, 9999999, WHITE);
-    octaveNameTextBox[1] = newTextBox("C6", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 24, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
+    octaveNameTextBox[1] = newTextBox("C3", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 24, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
     updateLine(settings, mainFont, octaveNameTextBox[1], NULL, 9999999, 9999999, WHITE);
-    octaveNameTextBox[2] = newTextBox("C7", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 48, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
+    octaveNameTextBox[2] = newTextBox("C4", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 48, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
     updateLine(settings, mainFont, octaveNameTextBox[2], NULL, 9999999, 9999999, GREEN);
-    octaveNameTextBox[3] = newTextBox("C8", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 72, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
+    octaveNameTextBox[3] = newTextBox("C5", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 72, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
     updateLine(settings, mainFont, octaveNameTextBox[3], NULL, 9999999, 9999999, WHITE);
-    octaveNameTextBox[4] = newTextBox("C9", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 96, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
+    octaveNameTextBox[4] = newTextBox("C6", 128, 9, mainFont, 0, settings->d, octaveNameTextBox[0]->tbSprite->x + 96, octaveTitleTextBox->tbSprite->y + 16, 13, 1);
     updateLine(settings, mainFont, octaveNameTextBox[4], NULL, 9999999, 9999999, WHITE);
     
     
@@ -1911,8 +1914,10 @@ void SoundTest(){
                 }
                 
                 //load sample
-                for(i = 0; i < 128; i++){
-                    DSPSample[i] = dataPtr[i];
+                for(ii =0; ii < sampleRepeat; ii++){
+                    for(i = 0; i < 128; i++){
+                        DSPSample[i + (ii*128)] = dataPtr[i];
+                    }
                 }
                 
                 //draw sample
@@ -1934,10 +1939,8 @@ void SoundTest(){
             //play sample
             if(playback){
                 clear_voice(0);
-                clear_voice(1);
                 if(menuSelection != 3){
-                    set_voice(0, VOICE_16|VOICE_BALANCE(panning)|VOICE_VOLUME(63)|VOICE_FREQ(playbackFreq, freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
-                    set_voice(1, VOICE_16|VOICE_BALANCE(panning)|VOICE_VOLUME(63)|VOICE_FREQ(playbackFreq, freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
+                    set_voice(0, VOICE_16|VOICE_BALANCE(panning)|VOICE_VOLUME(63)|VOICE_FREQ(playbackFreq, freq), (char*)DSPSample, sampleSize*2, (char*)DSPSample, sampleSize*2);
                 }
                 
                 else{
@@ -1947,7 +1950,6 @@ void SoundTest(){
             }
             else if(!playback){
                 clear_voice(0);
-                clear_voice(1);
             }
             
             
@@ -1991,13 +1993,13 @@ void SoundTest(){
                 sampleSelection++;
             }
             
-            if(menuSelection == 1 && octaveSelection < 4 && playbackFreq > C9){
+            if(menuSelection == 1 && octaveSelection < 4 && playbackFreq > C6){
                 octaveSelectionOld = octaveSelection;
                 octaveSelection++;
                 playbackFreq /= 2;
             }
-            if(playbackFreq < C9){
-                playbackFreq = C9;
+            if(playbackFreq < C6){
+                playbackFreq = C6;
             }
             
             if((menuSelection == 2 || menuSelection == 3) && panningSelection < 2){
@@ -2016,13 +2018,13 @@ void SoundTest(){
                 sampleSelection--;
             }
             
-            if(menuSelection == 1 && octaveSelection > 0 && playbackFreq < C5){
+            if(menuSelection == 1 && octaveSelection > 0 && playbackFreq < C2){
                 octaveSelectionOld = octaveSelection;
                 octaveSelection--;
                 playbackFreq *= 2;
             }
-            if(playbackFreq > C5){
-                playbackFreq = C5;
+            if(playbackFreq > C2){
+                playbackFreq = C2;
             }
             
             if((menuSelection == 2 || menuSelection == 3) && panningSelection > 0){
@@ -2086,13 +2088,13 @@ void SoundTest(){
     songData = NULL;
     
     clear_voice(0);
-    clear_voice(1);
     
 };
 
 void AudioSyncTest(){
     
-    int i = 1;
+    int i = 0;
+    int ii = 0;
     int exit = 0;
     int reset = 0;
     int running = 0;
@@ -2130,9 +2132,13 @@ void AudioSyncTest(){
     attach_sprite_to_display_at_layer(barSprite[0], settings->d, 13);
     attach_sprite_to_display_at_layer(barSprite[1], settings->d, 13);
 
-    int16_t DSPSample[128];
-    for(i = 0; i != 128; i++){
-        DSPSample[i] = (int16_t)JERRYREGS->rom_sine12w[i];
+    int sampleRepeat = 75;
+    int sampleSize = 128*sampleRepeat;
+    int16_t DSPSample[sampleSize];
+    for(ii = 0; ii < sampleRepeat; ii++){
+        for(i = 0; i != 128; i++){
+            DSPSample[(ii*128)+i] = (int16_t)JERRYREGS->rom_sine[i];
+        }
     }
     
     hide_or_show_display_layer_range(settings->d, 1, 3, 15);
@@ -2159,8 +2165,7 @@ void AudioSyncTest(){
             }
             else if(flash < 2){
                 
-                set_voice(0, VOICE_16|VOICE_BALANCE(0)|VOICE_VOLUME(63)|VOICE_FREQ(4250,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
-                set_voice(1, VOICE_16|VOICE_BALANCE(16)|VOICE_VOLUME(63)|VOICE_FREQ(4250,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
+                set_voice(0, VOICE_16|VOICE_BALANCE(8)|VOICE_VOLUME(63)|VOICE_FREQ(2148,freq), (char*)DSPSample, sampleSize*2, NULL, 0);
                 TOMREGS->bg = 0xFFFF;
                 flash++;
             }
@@ -2177,7 +2182,6 @@ void AudioSyncTest(){
         
         if(reset){
                 clear_voice(0);
-                clear_voice(1);
                 dotSprite->y = 162;
                 TOMREGS->bg = 0x0000;
                 flash = 0;
@@ -2209,6 +2213,8 @@ void AudioSyncTest(){
     }
                 
     hide_or_show_display_layer_range(settings->d, 0, 3, 15);
+    
+    clear_voice(0);
     
     detach_sprite_from_display(barSprite[1]);
     detach_sprite_from_display(barSprite[0]);
@@ -2745,7 +2751,7 @@ void ReflexNTiming(){
     int audio = 1;
     int drawoffset = 0;
     int clicks[11];
-    int soundFreq = C9;
+    int soundFreq = C6;
 
     x = 144;
     y = 60;
@@ -2824,14 +2830,12 @@ void ReflexNTiming(){
         if(y == 96){
             if(audio && !usersound){
                 clear_voice(0);
-                clear_voice(1);
             }
         }
         
         
         if(usersound){
             clear_voice(0);
-            clear_voice(1);
             usersound = 0;
         }
 
@@ -2859,14 +2863,13 @@ void ReflexNTiming(){
                     
                 if(audio){
                     if(clicks[pos] == 0){
-                        soundFreq = C7;
+                        soundFreq = C6;
                     }
                     else{
-                        soundFreq = C9;
+                        soundFreq = C4;
                     }
-                    set_voice(0, VOICE_16|VOICE_BALANCE(0)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
-                    set_voice(1, VOICE_16|VOICE_BALANCE(16)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
-                    usersound = 1;
+                    set_voice(0, VOICE_16|VOICE_BALANCE(8)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 256, (char*)DSPSample, 256);
+					usersound = 1;
                 }
             }
         }
@@ -3056,9 +3059,8 @@ void ReflexNTiming(){
         if(y == 96){
             if(audio)
             {
-                soundFreq = C7;
-                set_voice(0, VOICE_16|VOICE_BALANCE(0)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
-                set_voice(1, VOICE_16|VOICE_BALANCE(16)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 128, (char*)DSPSample, 128);
+                soundFreq = C4;
+                set_voice(0, VOICE_16|VOICE_BALANCE(8)|VOICE_VOLUME(63)|VOICE_FREQ(soundFreq,freq), (char*)DSPSample, 256, (char*)DSPSample, 256);
             }
             TOMREGS->bg = (15<<11)|(15<<6)|(31);
         }
@@ -3070,7 +3072,6 @@ void ReflexNTiming(){
     hide_or_show_display_layer_range(settings->d, 0, 3, 15);
     
     clear_voice(0);
-    clear_voice(1);
     
     for(i = 0; i < 3; i++){
         detach_sprite_from_display(lagPerSprite[i]);

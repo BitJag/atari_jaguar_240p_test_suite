@@ -101,9 +101,13 @@ sprite *ledSprite;
 void LEDZoneTest();
 
 //Values for notes are based on the sound driver being init to play back at 16000 sample rate
-#define C5 C6*2
-#define C6 C7*2
-#define C7 16500
+#define C1 C2*2
+#define C2 C3*2
+#define C3 C4*2
+#define C4 8216
+#define C5 C4/2
+#define C6 C5/2
+#define C7 C6/2
 #define C8 C7/2
 #define C9 C8/2
 extern uint8_t song;
